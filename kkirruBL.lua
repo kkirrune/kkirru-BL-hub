@@ -2,7 +2,7 @@ local config = {
     version = "1.0.0",
     author = "kkirrune",
     github = "https://github.com/kkirrune",
-    scripts_url = "https://raw.githubusercontent.com/kkirru/scripts/main/",
+    scripts_url = "https://raw.githubusercontent.com/kkirrune/scripts/main/",
     webhook_url = "https://discord.com/api/webhooks/",
     
     features = {
@@ -41,7 +41,6 @@ local config = {
         {name = "King Legacy", id = 4520749081}
     },
     
-    -- REMOVED KEY SYSTEM
     key_system = false,
     premium_only = false,
     auto_update = true,
@@ -52,7 +51,7 @@ local config = {
 -- Anti-detection functions
 local anti = {
     check_environment = function()
-        if getgenv and getgenv().xhider_loaded then
+        if getgenv and getgenv().kkirru_loaded then
             return false, "Already loaded"
         end
         
@@ -122,12 +121,12 @@ local anti = {
     end
 }
 
--- Main executor class
-local XHider = {}
-XHider.__index = XHider
+-- Main executor class - ĐỔI TÊN TỪ XHider thành kkirru
+local kkirru = {}
+kkirru.__index = kkirru
 
-function XHider.new()
-    local self = setmetatable({}, XHider)
+function kkirru.new()
+    local self = setmetatable({}, kkirru)
     
     self.Services = {
         Players = game:GetService("Players"),
@@ -153,23 +152,18 @@ function XHider.new()
     return self
 end
 
-function XHider:Initialize()
-    -- NO KEY CHECK - DIRECT INITIALIZATION
-    print("XHider v" .. config.version .. " - No Key Required")
+function kkirru:Initialize()
+    print("kkirru v" .. config.version .. " - No Key Required")
     
-    -- Load scripts
     self:LoadScripts()
-    
-    -- Create GUI
     self:CreateGUI()
     
-    -- Setup auto-execute
     if config.auto_update then
         self:AutoUpdate()
     end
     
     self.Loaded = true
-    getgenv().xhider_loaded = true
+    getgenv().kkirru_loaded = true
 end
 
 function kkirru:LoadScripts()
@@ -182,7 +176,6 @@ function kkirru:LoadScripts()
     if success and response then
         self.Scripts = response
     else
-        -- Default scripts
         self.Scripts = {
             {
                 name = "Infinite Yield",
@@ -213,14 +206,12 @@ function kkirru:LoadScripts()
 end
 
 function kkirru:CreateGUI()
-    -- Destroy old GUI if exists
     if self.GUI then
         self.GUI:Destroy()
     end
     
-    -- Main screen GUI
     self.GUI = Instance.new("ScreenGui")
-    self.GUI.Name = "kkirru"
+    self.GUI.Name = "kkirru" -- Đổi tên GUI
     self.GUI.Parent = self.Services.CoreGui
     self.GUI.ResetOnSpawn = false
     
@@ -243,7 +234,7 @@ function kkirru:CreateGUI()
     topBar.Parent = mainFrame
     
     local title = Instance.new("TextLabel")
-    title.Text = "kkirru v" .. config.version .. " - NO KEY"
+    title.Text = "kkirru v" .. config.version .. " - NO KEY" -- Đổi tiêu đề
     title.Size = UDim2.new(0, 250, 1, 0)
     title.BackgroundTransparency = 1
     title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -282,7 +273,6 @@ function kkirru:CreateGUI()
     local contentFrames = {}
     
     for i, tab in ipairs(tabs) do
-        -- Tab button
         local tabButton = Instance.new("TextButton")
         tabButton.Name = tab.name
         tabButton.Text = tab.icon .. " " .. tab.name
@@ -295,7 +285,6 @@ function kkirru:CreateGUI()
         tabButton.Parent = tabsFrame
         tabButtons[i] = tabButton
         
-        -- Content frame
         local contentFrame = Instance.new("Frame")
         contentFrame.Name = tab.name .. "Content"
         contentFrame.Size = UDim2.new(1, -100, 1, -40)
@@ -322,7 +311,7 @@ function kkirru:CreateGUI()
     scriptBox.TextYAlignment = Enum.TextYAlignment.Top
     scriptBox.ClearTextOnFocus = false
     scriptBox.MultiLine = true
-    scriptBox.Text = "-- Paste your script here\nprint('Hello XHider!')"
+    scriptBox.Text = "-- Paste your script here\nprint('Hello kkirru!')" -- Đổi thông báo
     scriptBox.Parent = executorContent
     
     local executeButton = Instance.new("TextButton")
@@ -390,7 +379,7 @@ function kkirru:CreateGUI()
         scriptName.Parent = scriptFrame
         
         local scriptAuthor = Instance.new("TextLabel")
-        scriptAuthor.Text = "by kkirru " .. script.author
+        scriptAuthor.Text = "by " .. script.author
         scriptAuthor.Size = UDim2.new(0.7, 0, 0, 20)
         scriptAuthor.Position = UDim2.new(0, 10, 0, 35)
         scriptAuthor.BackgroundTransparency = 1
@@ -417,13 +406,11 @@ function kkirru:CreateGUI()
             
             if success then
                 scriptBox.Text = scriptSource
-                -- Switch to executor tab
                 for i, frame in ipairs(contentFrames) do
                     frame.Visible = false
                 end
                 executorContent.Visible = true
                 
-                -- Update tab button colors
                 for _, btn in ipairs(tabButtons) do
                     btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
                 end
@@ -434,7 +421,7 @@ function kkirru:CreateGUI()
         end)
     end
     
-    -- Settings tab content
+    -- Settings tab content (giữ nguyên, có thể tùy chỉnh thêm)
     local settingsContent = contentFrames[3]
     
     local settings = {
@@ -491,7 +478,6 @@ function kkirru:CreateGUI()
                 toggle.Text = setting.default and "ON" or "OFF"
                 toggle.BackgroundColor3 = setting.default and Color3.fromRGB(0, 120, 215) or Color3.fromRGB(60, 60, 60)
                 
-                -- Save setting
                 pcall(function()
                     if isfile("kkirru_settings.json") then
                         local settingsData = self.Services.HttpService:JSONDecode(readfile("kkirru_settings.json"))
@@ -506,12 +492,12 @@ function kkirru:CreateGUI()
         end
     end
     
-    -- Credits tab content - REMOVED DISCORD
+    -- Credits tab content
     local creditsContent = contentFrames[4]
     
     local creditsText = Instance.new("TextLabel")
     creditsText.Text = [[
-kkirrune v]] .. config.version .. [[
+kkirru v]] .. config.version .. [[
 
 Developers:
 • kkirrune
@@ -551,9 +537,11 @@ This is a modified version with no key system.
     end)
     
     copyButton.MouseButton1Click:Connect(function()
-        setclipboard(scriptBox.Text)
+        if setclipboard then
+            setclipboard(scriptBox.Text)
+        end
     end)
-      
+    
     closeButton.MouseButton1Click:Connect(function()
         self.GUI:Destroy()
         self.GUI = nil
@@ -567,7 +555,6 @@ This is a modified version with no key system.
             end
             contentFrames[i].Visible = true
             
-            -- Update button colors
             for _, btn in ipairs(tabButtons) do
                 btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
             end
@@ -611,9 +598,9 @@ This is a modified version with no key system.
         end
     end)
     
-    -- Add watermark
+    -- Add watermark - ĐỔI TÊN
     local watermark = Instance.new("TextLabel")
-    watermark.Text = "XHider | FPS: 60"
+    watermark.Text = "kkirru | FPS: 60" -- Đổi watermark
     watermark.Size = UDim2.new(0, 120, 0, 20)
     watermark.Position = UDim2.new(1, -130, 1, -25)
     watermark.BackgroundTransparency = 1
@@ -631,7 +618,7 @@ This is a modified version with no key system.
         local currentTime = tick()
         if currentTime - lastTime >= 1 then
             local fps = math.floor(frames / (currentTime - lastTime))
-            watermark.Text = "kkirru | FPS: " .. fps
+            watermark.Text = "kkirru | FPS: " .. fps -- Cập nhật watermark
             frames = 0
             lastTime = currentTime
         end
@@ -640,14 +627,13 @@ end
 
 function kkirru:AutoUpdate()
     spawn(function()
-        while task.wait(3600) do -- Check every hour
+        while task.wait(3600) do
             local success, latestVersion = pcall(function()
                 return game:HttpGet(config.github .. "/version.txt")
             end)
             
             if success and latestVersion and latestVersion ~= config.version then
                 warn("New version available: " .. latestVersion)
-                -- Could add auto-update logic here
             end
         end
     end)
@@ -680,9 +666,9 @@ end
 local success, errorMsg = anti.check_environment()
 if success then
     anti.bypass_checks()
-    local kkirru = kkirru.new()
+    local kkirruInstance = kkirru.new() -- Đổi tên biến
     
-    -- Notify user
+    -- Notify user - ĐỔI TÊN THÔNG BÁO
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "kkirru - No Key",
         Text = "Successfully loaded! No key required.",
@@ -697,8 +683,8 @@ if success then
                 local http = game:GetService("HttpService")
                 local data = {
                     embeds = {{
-                        title = "kkirru Execution Log",
-                        description = "User executed kkirru",
+                        title = "kkirru Execution Log", -- Đổi tiêu đề log
+                        description = "User executed kkirru", -- Đổi mô tả
                         color = 0x00FF00,
                         fields = {
                             {name = "Username", value = game.Players.LocalPlayer.Name, inline = true},
@@ -707,7 +693,7 @@ if success then
                             {name = "Executor", value = identifyexecutor and identifyexecutor() or "Unknown", inline = true},
                             {name = "Time", value = os.date("%Y-%m-%d %H:%M:%S"), inline = true}
                         },
-                        footer = {text = "kkirru v" .. config.version}
+                        footer = {text = "kkirru v" .. config.version} -- Đổi footer
                     }}
                 }
                 
@@ -723,7 +709,7 @@ if success then
         end)
     end
 else
-    warn("kkirru failed to load: " .. (errorMsg or "Unknown error"))
+    warn("kkirru failed to load: " .. (errorMsg or "Unknown error")) -- Đổi thông báo lỗi
 end
 
 return kkirru
