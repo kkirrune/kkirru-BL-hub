@@ -5,6 +5,9 @@ local config = {
     scripts_url = "https://raw.githubusercontent.com/kkirrune/scripts/main/",
     webhook_url = "https://discord.com/api/webhooks/",
     
+    -- LOGO TỪ DISCORD
+    assets_url = "https://media.discordapp.net/attachments/1375462758752976898/1446866663990362245/kkirru_2.png",
+    
     features = {
         "Executor",
         "Script Hub", 
@@ -121,7 +124,7 @@ local anti = {
     end
 }
 
--- Main executor class - ĐỔI TÊN TỪ XHider thành kkirru
+-- Main executor class
 local kkirru = {}
 kkirru.__index = kkirru
 
@@ -211,86 +214,166 @@ function kkirru:CreateGUI()
     end
     
     self.GUI = Instance.new("ScreenGui")
-    self.GUI.Name = "kkirru" -- Đổi tên GUI
+    self.GUI.Name = "kkirru"
     self.GUI.Parent = self.Services.CoreGui
     self.GUI.ResetOnSpawn = false
     
-    -- Main container
+    -- Main container (lớn hơn để chứa logo)
     local mainFrame = Instance.new("Frame")
     mainFrame.Name = "Main"
-    mainFrame.Size = UDim2.new(0, 500, 0, 400)
-    mainFrame.Position = UDim2.new(0.5, -250, 0.5, -200)
-    mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    mainFrame.Size = UDim2.new(0, 550, 0, 500)
+    mainFrame.Position = UDim2.new(0.5, -275, 0.5, -250)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    mainFrame.BackgroundTransparency = 0.1
     mainFrame.BorderSizePixel = 0
     mainFrame.ClipsDescendants = true
     mainFrame.Parent = self.GUI
     
-    -- Top bar
+    -- Tạo background gradient
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 40)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 30))
+    })
+    gradient.Rotation = 45
+    gradient.Parent = mainFrame
+    
+    -- THÊM LOGO LỚN LÀM BACKGROUND
+    local backgroundLogo = Instance.new("ImageLabel")
+    backgroundLogo.Name = "BackgroundLogo"
+    backgroundLogo.Size = UDim2.new(1, 0, 1, 0)
+    backgroundLogo.Position = UDim2.new(0, 0, 0, 0)
+    backgroundLogo.BackgroundTransparency = 1
+    backgroundLogo.Image = config.assets_url
+    backgroundLogo.ImageTransparency = 0.05
+    backgroundLogo.ScaleType = Enum.ScaleType.Fit
+    backgroundLogo.ZIndex = 0
+    backgroundLogo.Parent = mainFrame
+    
+    -- Top bar với logo
     local topBar = Instance.new("Frame")
     topBar.Name = "TopBar"
-    topBar.Size = UDim2.new(1, 0, 0, 40)
-    topBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    topBar.Size = UDim2.new(1, 0, 0, 50)
+    topBar.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+    topBar.BackgroundTransparency = 0.3
     topBar.BorderSizePixel = 0
+    topBar.ZIndex = 2
     topBar.Parent = mainFrame
     
+    -- Logo nhỏ trên top bar
+    local logo = Instance.new("ImageLabel")
+    logo.Name = "Logo"
+    logo.Size = UDim2.new(0, 40, 0, 40)
+    logo.Position = UDim2.new(0, 10, 0.5, -20)
+    logo.BackgroundTransparency = 1
+    logo.Image = config.assets_url
+    logo.ScaleType = Enum.ScaleType.Fit
+    logo.ZIndex = 3
+    logo.Parent = topBar
+    
+    -- Title với hiệu ứng
     local title = Instance.new("TextLabel")
-    title.Text = "kkirru v" .. config.version .. " - NO KEY" -- Đổi tiêu đề
-    title.Size = UDim2.new(0, 250, 1, 0)
+    title.Text = "KKIRRU SCRIPT BL v" .. config.version
+    title.Size = UDim2.new(0, 300, 1, 0)
+    title.Position = UDim2.new(0, 60, 0, 0)
     title.BackgroundTransparency = 1
-    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextColor3 = Color3.fromRGB(0, 200, 255)
     title.Font = Enum.Font.GothamBold
-    title.TextSize = 18
+    title.TextSize = 16
     title.TextXAlignment = Enum.TextXAlignment.Left
+    title.ZIndex = 3
     title.Parent = topBar
     
+    -- Hiệu ứng glow cho title
+    local titleGlow = Instance.new("TextLabel")
+    titleGlow.Text = title.Text
+    titleGlow.Size = title.Size
+    titleGlow.Position = title.Position
+    titleGlow.BackgroundTransparency = 1
+    titleGlow.TextColor3 = Color3.fromRGB(0, 150, 255)
+    titleGlow.Font = title.Font
+    titleGlow.TextSize = title.TextSize
+    titleGlow.TextXAlignment = title.TextXAlignment
+    titleGlow.ZIndex = 2
+    titleGlow.TextTransparency = 0.5
+    titleGlow.Parent = topBar
+    
+    local subtitle = Instance.new("TextLabel")
+    subtitle.Text = "MULTI-FORM • NO KEY REQUIRED"
+    subtitle.Size = UDim2.new(0, 300, 0, 20)
+    subtitle.Position = UDim2.new(0, 60, 0, 30)
+    subtitle.BackgroundTransparency = 1
+    subtitle.TextColor3 = Color3.fromRGB(150, 150, 255)
+    subtitle.Font = Enum.Font.Gotham
+    subtitle.TextSize = 12
+    subtitle.TextXAlignment = Enum.TextXAlignment.Left
+    subtitle.ZIndex = 3
+    subtitle.Parent = topBar
+    
     local closeButton = Instance.new("TextButton")
-    closeButton.Text = "X"
+    closeButton.Text = "✕"
     closeButton.Size = UDim2.new(0, 40, 1, 0)
     closeButton.Position = UDim2.new(1, -40, 0, 0)
     closeButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+    closeButton.BackgroundTransparency = 0.3
     closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     closeButton.Font = Enum.Font.GothamBold
     closeButton.TextSize = 18
+    closeButton.ZIndex = 3
     closeButton.Parent = topBar
     
-    -- Tab buttons
+    -- Tab buttons với hiệu ứng
     local tabsFrame = Instance.new("Frame")
     tabsFrame.Name = "Tabs"
-    tabsFrame.Size = UDim2.new(0, 100, 1, -40)
-    tabsFrame.Position = UDim2.new(0, 0, 0, 40)
-    tabsFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    tabsFrame.Size = UDim2.new(0, 120, 1, -50)
+    tabsFrame.Position = UDim2.new(0, 0, 0, 50)
+    tabsFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    tabsFrame.BackgroundTransparency = 0.2
     tabsFrame.BorderSizePixel = 0
+    tabsFrame.ZIndex = 2
     tabsFrame.Parent = mainFrame
-    
-    local tabs = {
-        {name = "Executor", icon = "📜"},
-        {name = "Scripts", icon = "📂"},
-        {name = "Settings", icon = "⚙️"},
-        {name = "Credits", icon = "👥"}
-    }
-    
+        
     local tabButtons = {}
     local contentFrames = {}
     
     for i, tab in ipairs(tabs) do
         local tabButton = Instance.new("TextButton")
         tabButton.Name = tab.name
-        tabButton.Text = tab.icon .. " " .. tab.name
-        tabButton.Size = UDim2.new(1, 0, 0, 40)
-        tabButton.Position = UDim2.new(0, 0, 0, (i-1) * 40)
-        tabButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-        tabButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+        tabButton.Text = tab.icon .. "  " .. tab.name
+        tabButton.Size = UDim2.new(1, 0, 0, 50)
+        tabButton.Position = UDim2.new(0, 0, 0, (i-1) * 50)
+        tabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+        tabButton.BackgroundTransparency = 0.3
+        tabButton.TextColor3 = Color3.fromRGB(200, 200, 255)
         tabButton.Font = Enum.Font.Gotham
         tabButton.TextSize = 14
+        tabButton.ZIndex = 3
         tabButton.Parent = tabsFrame
+        
+        -- Hiệu ứng hover
+        tabButton.MouseEnter:Connect(function()
+            game:GetService("TweenService"):Create(tabButton, TweenInfo.new(0.2), {
+                BackgroundColor3 = Color3.fromRGB(40, 40, 60),
+                TextColor3 = Color3.fromRGB(255, 255, 255)
+            }):Play()
+        end)
+        
+        tabButton.MouseLeave:Connect(function()
+            game:GetService("TweenService"):Create(tabButton, TweenInfo.new(0.2), {
+                BackgroundColor3 = Color3.fromRGB(30, 30, 40),
+                TextColor3 = Color3.fromRGB(200, 200, 255)
+            }):Play()
+        end)
+        
         tabButtons[i] = tabButton
         
         local contentFrame = Instance.new("Frame")
         contentFrame.Name = tab.name .. "Content"
-        contentFrame.Size = UDim2.new(1, -100, 1, -40)
-        contentFrame.Position = UDim2.new(0, 100, 0, 40)
+        contentFrame.Size = UDim2.new(1, -120, 1, -50)
+        contentFrame.Position = UDim2.new(0, 120, 0, 50)
         contentFrame.BackgroundTransparency = 1
         contentFrame.Visible = i == 1
+        contentFrame.ZIndex = 2
         contentFrame.Parent = mainFrame
         contentFrames[i] = contentFrame
     end
@@ -298,12 +381,38 @@ function kkirru:CreateGUI()
     -- Executor tab content
     local executorContent = contentFrames[1]
     
+    -- Header với logo nhỏ
+    local executorHeader = Instance.new("Frame")
+    executorHeader.Size = UDim2.new(1, 0, 0, 40)
+    executorHeader.BackgroundTransparency = 1
+    executorHeader.Parent = executorContent
+    
+    local executorIcon = Instance.new("ImageLabel")
+    executorIcon.Size = UDim2.new(0, 30, 0, 30)
+    executorIcon.Position = UDim2.new(0, 10, 0.5, -15)
+    executorIcon.BackgroundTransparency = 1
+    executorIcon.Image = config.assets_url
+    executorIcon.ScaleType = Enum.ScaleType.Fit
+    executorIcon.Parent = executorHeader
+    
+    local executorTitle = Instance.new("TextLabel")
+    executorTitle.Text = "SCRIPT EXECUTOR"
+    executorTitle.Size = UDim2.new(1, -50, 1, 0)
+    executorTitle.Position = UDim2.new(0, 50, 0, 0)
+    executorTitle.BackgroundTransparency = 1
+    executorTitle.TextColor3 = Color3.fromRGB(0, 200, 255)
+    executorTitle.Font = Enum.Font.GothamBold
+    executorTitle.TextSize = 18
+    executorTitle.TextXAlignment = Enum.TextXAlignment.Left
+    executorTitle.Parent = executorHeader
+    
     local scriptBox = Instance.new("TextBox")
     scriptBox.Name = "ScriptBox"
-    scriptBox.Size = UDim2.new(1, -20, 0.7, -10)
-    scriptBox.Position = UDim2.new(0, 10, 0, 10)
-    scriptBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    scriptBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    scriptBox.Size = UDim2.new(1, -20, 0.7, -60)
+    scriptBox.Position = UDim2.new(0, 10, 0, 50)
+    scriptBox.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+    scriptBox.BackgroundTransparency = 0.2
+    scriptBox.TextColor3 = Color3.fromRGB(220, 220, 255)
     scriptBox.Font = Enum.Font.Code
     scriptBox.TextSize = 14
     scriptBox.TextWrapped = true
@@ -311,66 +420,98 @@ function kkirru:CreateGUI()
     scriptBox.TextYAlignment = Enum.TextYAlignment.Top
     scriptBox.ClearTextOnFocus = false
     scriptBox.MultiLine = true
-    scriptBox.Text = "-- Paste your script here\nprint('Hello kkirru!')" -- Đổi thông báo
+    scriptBox.Text = "-- KKIRRU Script Executor\n-- Paste your script here\n\nprint('KKIRRU Script BL Loaded!')"
     scriptBox.Parent = executorContent
     
+    -- Button container
+    local buttonContainer = Instance.new("Frame")
+    buttonContainer.Size = UDim2.new(1, -20, 0, 50)
+    buttonContainer.Position = UDim2.new(0, 10, 1, -60)
+    buttonContainer.BackgroundTransparency = 1
+    buttonContainer.Parent = executorContent
+    
     local executeButton = Instance.new("TextButton")
-    executeButton.Text = "Execute"
-    executeButton.Size = UDim2.new(0.3, 0, 0, 40)
-    executeButton.Position = UDim2.new(0, 10, 1, -50)
+    executeButton.Text = "EXECUTE"
+    executeButton.Size = UDim2.new(0.32, 0, 1, 0)
+    executeButton.Position = UDim2.new(0, 0, 0, 0)
     executeButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+    executeButton.BackgroundTransparency = 0.2
     executeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     executeButton.Font = Enum.Font.GothamBold
-    executeButton.TextSize = 16
-    executeButton.Parent = executorContent
+    executeButton.TextSize = 14
+    executeButton.Parent = buttonContainer
     
     local clearButton = Instance.new("TextButton")
-    clearButton.Text = "Clear"
-    clearButton.Size = UDim2.new(0.3, 0, 0, 40)
-    clearButton.Position = UDim2.new(0.35, 10, 1, -50)
+    clearButton.Text = "CLEAR"
+    clearButton.Size = UDim2.new(0.32, 0, 1, 0)
+    clearButton.Position = UDim2.new(0.34, 0, 0, 0)
     clearButton.BackgroundColor3 = Color3.fromRGB(215, 60, 0)
+    clearButton.BackgroundTransparency = 0.2
     clearButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     clearButton.Font = Enum.Font.Gotham
-    clearButton.TextSize = 16
-    clearButton.Parent = executorContent
+    clearButton.TextSize = 14
+    clearButton.Parent = buttonContainer
     
     local copyButton = Instance.new("TextButton")
-    copyButton.Text = "Copy Output"
-    copyButton.Size = UDim2.new(0.3, 0, 0, 40)
-    copyButton.Position = UDim2.new(0.7, 0, 1, -50)
-    copyButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    copyButton.Text = "COPY"
+    copyButton.Size = UDim2.new(0.32, 0, 1, 0)
+    copyButton.Position = UDim2.new(0.68, 0, 0, 0)
+    copyButton.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+    copyButton.BackgroundTransparency = 0.2
     copyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     copyButton.Font = Enum.Font.Gotham
-    copyButton.TextSize = 16
-    copyButton.Parent = executorContent
+    copyButton.TextSize = 14
+    copyButton.Parent = buttonContainer
     
     -- Scripts tab content
     local scriptsContent = contentFrames[2]
     
+    local scriptsHeader = Instance.new("TextLabel")
+    scriptsHeader.Text = "SCRIPT LIBRARY"
+    scriptsHeader.Size = UDim2.new(1, 0, 0, 40)
+    scriptsHeader.BackgroundTransparency = 1
+    scriptsHeader.TextColor3 = Color3.fromRGB(0, 200, 255)
+    scriptsHeader.Font = Enum.Font.GothamBold
+    scriptsHeader.TextSize = 18
+    scriptsHeader.Parent = scriptsContent
+    
     local scriptsList = Instance.new("ScrollingFrame")
-    scriptsList.Size = UDim2.new(1, -20, 1, -20)
-    scriptsList.Position = UDim2.new(0, 10, 0, 10)
-    scriptsList.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    scriptsList.Size = UDim2.new(1, -20, 1, -60)
+    scriptsList.Position = UDim2.new(0, 10, 0, 50)
+    scriptsList.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+    scriptsList.BackgroundTransparency = 0.2
     scriptsList.BorderSizePixel = 0
     scriptsList.ScrollBarThickness = 6
     scriptsList.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    scriptsList.CanvasSize = UDim2.new(0, 0, 0, 0)
     scriptsList.Parent = scriptsContent
     
     local uiListLayout = Instance.new("UIListLayout")
-    uiListLayout.Padding = UDim.new(0, 5)
+    uiListLayout.Padding = UDim.new(0, 10)
     uiListLayout.Parent = scriptsList
     
     for i, script in ipairs(self.Scripts) do
         local scriptFrame = Instance.new("Frame")
-        scriptFrame.Size = UDim2.new(1, 0, 0, 60)
-        scriptFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        scriptFrame.Size = UDim2.new(1, 0, 0, 70)
+        scriptFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+        scriptFrame.BackgroundTransparency = 0.3
         scriptFrame.BorderSizePixel = 0
         scriptFrame.Parent = scriptsList
         
+        -- Script icon với logo
+        local scriptIcon = Instance.new("ImageLabel")
+        scriptIcon.Size = UDim2.new(0, 40, 0, 40)
+        scriptIcon.Position = UDim2.new(0, 10, 0.5, -20)
+        scriptIcon.BackgroundTransparency = 1
+        scriptIcon.Image = config.assets_url
+        scriptIcon.ScaleType = Enum.ScaleType.Fit
+        scriptIcon.ImageTransparency = 0.5
+        scriptIcon.Parent = scriptFrame
+        
         local scriptName = Instance.new("TextLabel")
         scriptName.Text = script.name
-        scriptName.Size = UDim2.new(0.7, 0, 0, 30)
-        scriptName.Position = UDim2.new(0, 10, 0, 5)
+        scriptName.Size = UDim2.new(0.6, 0, 0, 30)
+        scriptName.Position = UDim2.new(0, 60, 0, 10)
         scriptName.BackgroundTransparency = 1
         scriptName.TextColor3 = Color3.fromRGB(255, 255, 255)
         scriptName.Font = Enum.Font.GothamBold
@@ -380,29 +521,33 @@ function kkirru:CreateGUI()
         
         local scriptAuthor = Instance.new("TextLabel")
         scriptAuthor.Text = "by " .. script.author
-        scriptAuthor.Size = UDim2.new(0.7, 0, 0, 20)
-        scriptAuthor.Position = UDim2.new(0, 10, 0, 35)
+        scriptAuthor.Size = UDim2.new(0.6, 0, 0, 20)
+        scriptAuthor.Position = UDim2.new(0, 60, 0, 40)
         scriptAuthor.BackgroundTransparency = 1
-        scriptAuthor.TextColor3 = Color3.fromRGB(200, 200, 200)
+        scriptAuthor.TextColor3 = Color3.fromRGB(180, 180, 220)
         scriptAuthor.Font = Enum.Font.Gotham
         scriptAuthor.TextSize = 12
         scriptAuthor.TextXAlignment = Enum.TextXAlignment.Left
         scriptAuthor.Parent = scriptFrame
         
         local executeScriptButton = Instance.new("TextButton")
-        executeScriptButton.Text = "Load"
+        executeScriptButton.Text = "LOAD"
         executeScriptButton.Size = UDim2.new(0.2, 0, 0, 40)
         executeScriptButton.Position = UDim2.new(0.75, -10, 0.5, -20)
-        executeScriptButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+        executeScriptButton.BackgroundColor3 = Color3.fromRGB(0, 150, 100)
+        executeScriptButton.BackgroundTransparency = 0.2
         executeScriptButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-        executeScriptButton.Font = Enum.Font.Gotham
-        executeScriptButton.TextSize = 14
+        executeScriptButton.Font = Enum.Font.GothamBold
+        executeScriptButton.TextSize = 12
         executeScriptButton.Parent = scriptFrame
         
         executeScriptButton.MouseButton1Click:Connect(function()
+            self:ShowLoading(true)
             local success, scriptSource = pcall(function()
                 return game:HttpGet(script.url)
             end)
+            
+            self:ShowLoading(false)
             
             if success then
                 scriptBox.Text = scriptSource
@@ -412,122 +557,88 @@ function kkirru:CreateGUI()
                 executorContent.Visible = true
                 
                 for _, btn in ipairs(tabButtons) do
-                    btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
                 end
-                tabButtons[1].BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+                tabButtons[1].BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+                
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Script Loaded",
+                    Text = script.name .. " loaded to executor",
+                    Icon = "",
+                    Duration = 3
+                })
             else
                 warn("Failed to load script: " .. script.name)
             end
         end)
     end
     
-    -- Settings tab content (giữ nguyên, có thể tùy chỉnh thêm)
-    local settingsContent = contentFrames[3]
-    
-    local settings = {
-        {name = "Auto Execute", default = false},
-        {name = "Auto Attach", default = true},
-        {name = "Anti Ban", default = true},
-        {name = "Anti Log", default = true},
-        {name = "Notification Sounds", default = true},
-        {name = "Transparency", default = 0.8, min = 0.1, max = 1, step = 0.1}
-    }
-    
-    local settingsList = Instance.new("ScrollingFrame")
-    settingsList.Size = UDim2.new(1, -20, 1, -20)
-    settingsList.Position = UDim2.new(0, 10, 0, 10)
-    settingsList.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    settingsList.BorderSizePixel = 0
-    settingsList.ScrollBarThickness = 6
-    settingsList.AutomaticCanvasSize = Enum.AutomaticSize.Y
-    settingsList.Parent = settingsContent
-    
-    local settingsUIList = Instance.new("UIListLayout")
-    settingsUIList.Padding = UDim.new(0, 10)
-    settingsUIList.Parent = settingsList
-    
-    for i, setting in ipairs(settings) do
-        local settingFrame = Instance.new("Frame")
-        settingFrame.Size = UDim2.new(1, 0, 0, 40)
-        settingFrame.BackgroundTransparency = 1
-        settingFrame.Parent = settingsList
-        
-        local settingName = Instance.new("TextLabel")
-        settingName.Text = setting.name
-        settingName.Size = UDim2.new(0.6, 0, 1, 0)
-        settingName.BackgroundTransparency = 1
-        settingName.TextColor3 = Color3.fromRGB(255, 255, 255)
-        settingName.Font = Enum.Font.Gotham
-        settingName.TextSize = 14
-        settingName.TextXAlignment = Enum.TextXAlignment.Left
-        settingName.Parent = settingFrame
-        
-        if setting.default == true or setting.default == false then
-            local toggle = Instance.new("TextButton")
-            toggle.Text = setting.default and "ON" or "OFF"
-            toggle.Size = UDim2.new(0.3, 0, 0.7, 0)
-            toggle.Position = UDim2.new(0.65, 0, 0.15, 0)
-            toggle.BackgroundColor3 = setting.default and Color3.fromRGB(0, 120, 215) or Color3.fromRGB(60, 60, 60)
-            toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-            toggle.Font = Enum.Font.Gotham
-            toggle.TextSize = 14
-            toggle.Parent = settingFrame
-            
-            toggle.MouseButton1Click:Connect(function()
-                setting.default = not setting.default
-                toggle.Text = setting.default and "ON" or "OFF"
-                toggle.BackgroundColor3 = setting.default and Color3.fromRGB(0, 120, 215) or Color3.fromRGB(60, 60, 60)
-                
-                pcall(function()
-                    if isfile("kkirru_settings.json") then
-                        local settingsData = self.Services.HttpService:JSONDecode(readfile("kkirru_settings.json"))
-                        settingsData[setting.name] = setting.default
-                        writefile("kkirru_settings.json", self.Services.HttpService:JSONEncode(settingsData))
-                    else
-                        local settingsData = {[setting.name] = setting.default}
-                        writefile("kkirru_settings.json", self.Services.HttpService:JSONEncode(settingsData))
-                    end
-                end)
-            end)
-        end
-    end
-    
-    -- Credits tab content
+    -- Credits tab với logo lớn
     local creditsContent = contentFrames[4]
+    
+    local creditsLogo = Instance.new("ImageLabel")
+    creditsLogo.Size = UDim2.new(0, 200, 0, 200)
+    creditsLogo.Position = UDim2.new(0.5, -100, 0.1, 0)
+    creditsLogo.BackgroundTransparency = 1
+    creditsLogo.Image = config.assets_url
+    creditsLogo.ScaleType = Enum.ScaleType.Fit
+    creditsLogo.Parent = creditsContent
     
     local creditsText = Instance.new("TextLabel")
     creditsText.Text = [[
-kkirru v]] .. config.version .. [[
+KKIRRU SCRIPT BL v]] .. config.version .. [[
 
-Developers:
-• kkirrune
-• Special thanks to our contributors
+MULTI-FORM SCRIPT HUB
+NO KEY SYSTEM REQUIRED
 
-GitHub: ]] .. config.github .. [[
+DEVELOPER: kkirrune
+GITHUB: ]] .. config.github .. [[
 
-This is a modified version with no key system.
+FEATURES:
+• Built-in Executor
+• Script Library
+• Auto Execute
+• Anti-Ban System
+• Auto Update
+
+© 2022/KKIRRUNE, ALL RIGHTS RESERVED
     ]]
-    creditsText.Size = UDim2.new(1, -40, 1, -40)
-    creditsText.Position = UDim2.new(0, 20, 0, 20)
+    creditsText.Size = UDim2.new(1, -40, 0.6, 0)
+    creditsText.Position = UDim2.new(0, 20, 0, 220)
     creditsText.BackgroundTransparency = 1
-    creditsText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    creditsText.TextColor3 = Color3.fromRGB(200, 200, 255)
     creditsText.Font = Enum.Font.Gotham
     creditsText.TextSize = 14
     creditsText.TextWrapped = true
-    creditsText.TextXAlignment = Enum.TextXAlignment.Left
+    creditsText.TextXAlignment = Enum.TextXAlignment.Center
     creditsText.TextYAlignment = Enum.TextYAlignment.Top
     creditsText.Parent = creditsContent
     
-    -- Button functionality
+    -- Button functionality với hiệu ứng
     executeButton.MouseButton1Click:Connect(function()
         local scriptToExecute = scriptBox.Text
         if scriptToExecute and scriptToExecute ~= "" then
+            self:ShowLoading(true)
             local success, errorMessage = pcall(function()
                 loadstring(scriptToExecute)()
             end)
+            self:ShowLoading(false)
             
             if not success then
                 warn("Execution error: " .. errorMessage)
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Execution Error",
+                    Text = errorMessage,
+                    Icon = "",
+                    Duration = 5
+                })
+            else
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Script Executed",
+                    Text = "Script executed successfully!",
+                    Icon = "",
+                    Duration = 3
+                })
             end
         end
     end)
@@ -539,6 +650,12 @@ This is a modified version with no key system.
     copyButton.MouseButton1Click:Connect(function()
         if setclipboard then
             setclipboard(scriptBox.Text)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Copied",
+                Text = "Script copied to clipboard",
+                Icon = "",
+                Duration = 2
+            })
         end
     end)
     
@@ -547,7 +664,7 @@ This is a modified version with no key system.
         self.GUI = nil
     end)
     
-    -- Tab switching
+    -- Tab switching với hiệu ứng
     for i, tabButton in ipairs(tabButtons) do
         tabButton.MouseButton1Click:Connect(function()
             for j, frame in ipairs(contentFrames) do
@@ -556,9 +673,16 @@ This is a modified version with no key system.
             contentFrames[i].Visible = true
             
             for _, btn in ipairs(tabButtons) do
-                btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                game:GetService("TweenService"):Create(btn, TweenInfo.new(0.2), {
+                    BackgroundColor3 = Color3.fromRGB(30, 30, 40),
+                    TextColor3 = Color3.fromRGB(200, 200, 255)
+                }):Play()
             end
-            tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            
+            game:GetService("TweenService"):Create(tabButton, TweenInfo.new(0.2), {
+                BackgroundColor3 = Color3.fromRGB(50, 50, 70),
+                TextColor3 = Color3.fromRGB(255, 255, 255)
+            }):Play()
         end)
     end
     
@@ -598,16 +722,31 @@ This is a modified version with no key system.
         end
     end)
     
-    -- Add watermark - ĐỔI TÊN
-    local watermark = Instance.new("TextLabel")
-    watermark.Text = "kkirru | FPS: 60" -- Đổi watermark
-    watermark.Size = UDim2.new(0, 120, 0, 20)
-    watermark.Position = UDim2.new(1, -130, 1, -25)
+    -- Watermark với logo
+    local watermark = Instance.new("Frame")
+    watermark.Size = UDim2.new(0, 160, 0, 30)
+    watermark.Position = UDim2.new(1, -170, 1, -35)
     watermark.BackgroundTransparency = 1
-    watermark.TextColor3 = Color3.fromRGB(255, 255, 255)
-    watermark.Font = Enum.Font.Gotham
-    watermark.TextSize = 12
     watermark.Parent = mainFrame
+    
+    local watermarkIcon = Instance.new("ImageLabel")
+    watermarkIcon.Size = UDim2.new(0, 20, 0, 20)
+    watermarkIcon.Position = UDim2.new(0, 0, 0.5, -10)
+    watermarkIcon.BackgroundTransparency = 1
+    watermarkIcon.Image = config.assets_url
+    watermarkIcon.ScaleType = Enum.ScaleType.Fit
+    watermarkIcon.Parent = watermark
+    
+    local watermarkText = Instance.new("TextLabel")
+    watermarkText.Text = "KKIRRU | FPS: 60"
+    watermarkText.Size = UDim2.new(1, -25, 1, 0)
+    watermarkText.Position = UDim2.new(0, 25, 0, 0)
+    watermarkText.BackgroundTransparency = 1
+    watermarkText.TextColor3 = Color3.fromRGB(150, 150, 255)
+    watermarkText.Font = Enum.Font.Gotham
+    watermarkText.TextSize = 12
+    watermarkText.TextXAlignment = Enum.TextXAlignment.Left
+    watermarkText.Parent = watermark
     
     -- Update FPS counter
     local lastTime = tick()
@@ -618,11 +757,60 @@ This is a modified version with no key system.
         local currentTime = tick()
         if currentTime - lastTime >= 1 then
             local fps = math.floor(frames / (currentTime - lastTime))
-            watermark.Text = "kkirru | FPS: " .. fps -- Cập nhật watermark
+            watermarkText.Text = "KKIRRU | FPS: " .. fps
             frames = 0
             lastTime = currentTime
         end
     end)
+    
+    -- Tạo loading indicator
+    self.LoadingFrame = Instance.new("Frame")
+    self.LoadingFrame.Size = UDim2.new(0, 100, 0, 100)
+    self.LoadingFrame.Position = UDim2.new(0.5, -50, 0.5, -50)
+    self.LoadingFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    self.LoadingFrame.BackgroundTransparency = 0.3
+    self.LoadingFrame.Visible = false
+    self.LoadingFrame.ZIndex = 10
+    self.LoadingFrame.Parent = self.GUI
+    
+    local loadingLogo = Instance.new("ImageLabel")
+    loadingLogo.Size = UDim2.new(0, 60, 0, 60)
+    loadingLogo.Position = UDim2.new(0.5, -30, 0.5, -30)
+    loadingLogo.BackgroundTransparency = 1
+    loadingLogo.Image = config.assets_url
+    loadingLogo.ScaleType = Enum.ScaleType.Fit
+    loadingLogo.Parent = self.LoadingFrame
+    
+    local loadingText = Instance.new("TextLabel")
+    loadingText.Text = "LOADING..."
+    loadingText.Size = UDim2.new(1, 0, 0, 20)
+    loadingText.Position = UDim2.new(0, 0, 1, -25)
+    loadingText.BackgroundTransparency = 1
+    loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    loadingText.Font = Enum.Font.Gotham
+    loadingText.TextSize = 12
+    loadingText.Parent = self.LoadingFrame
+end
+
+-- Hàm hiển thị loading
+function kkirru:ShowLoading(show)
+    if self.LoadingFrame then
+        self.LoadingFrame.Visible = show
+        
+        if show then
+            -- Animation xoay
+            local rotation = 0
+            local connection
+            connection = game:GetService("RunService").RenderStepped:Connect(function(delta)
+                if not self.LoadingFrame or not self.LoadingFrame.Visible then
+                    connection:Disconnect()
+                    return
+                end
+                rotation = rotation + 180 * delta
+                self.LoadingFrame:FindFirstChild("ImageLabel").Rotation = rotation
+            end)
+        end
+    end
 end
 
 function kkirru:AutoUpdate()
@@ -634,6 +822,12 @@ function kkirru:AutoUpdate()
             
             if success and latestVersion and latestVersion ~= config.version then
                 warn("New version available: " .. latestVersion)
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Update Available",
+                    Text = "New version " .. latestVersion .. " available!",
+                    Icon = "",
+                    Duration = 10
+                })
             end
         end
     end)
@@ -642,6 +836,7 @@ end
 function kkirru:ExecuteScript(scriptName)
     for _, script in ipairs(self.Scripts) do
         if script.name == scriptName then
+            self:ShowLoading(true)
             local success, scriptSource = pcall(function()
                 return game:HttpGet(script.url)
             end)
@@ -651,10 +846,13 @@ function kkirru:ExecuteScript(scriptName)
                     loadstring(scriptSource)()
                 end)
                 
+                self:ShowLoading(false)
+                
                 if not success2 then
                     warn("Failed to execute " .. scriptName .. ": " .. errorMessage)
                 end
             else
+                self:ShowLoading(false)
                 warn("Failed to load " .. scriptName)
             end
             return
@@ -666,12 +864,12 @@ end
 local success, errorMsg = anti.check_environment()
 if success then
     anti.bypass_checks()
-    local kkirruInstance = kkirru.new() -- Đổi tên biến
+    local kkirruInstance = kkirru.new()
     
-    -- Notify user - ĐỔI TÊN THÔNG BÁO
+    -- Notify user với logo
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "kkirru - No Key",
-        Text = "Successfully loaded! No key required.",
+        Title = "KKIRRU SCRIPT BL",
+        Text = "Successfully loaded! v" .. config.version,
         Icon = "",
         Duration = 5
     })
@@ -683,9 +881,9 @@ if success then
                 local http = game:GetService("HttpService")
                 local data = {
                     embeds = {{
-                        title = "kkirru Execution Log", -- Đổi tiêu đề log
-                        description = "User executed kkirru", -- Đổi mô tả
-                        color = 0x00FF00,
+                        title = "KKIRRU Execution Log",
+                        description = "User executed KKIRRU Script BL",
+                        color = 0x00AAFF,
                         fields = {
                             {name = "Username", value = game.Players.LocalPlayer.Name, inline = true},
                             {name = "User ID", value = tostring(game.Players.LocalPlayer.UserId), inline = true},
@@ -693,7 +891,7 @@ if success then
                             {name = "Executor", value = identifyexecutor and identifyexecutor() or "Unknown", inline = true},
                             {name = "Time", value = os.date("%Y-%m-%d %H:%M:%S"), inline = true}
                         },
-                        footer = {text = "kkirru v" .. config.version} -- Đổi footer
+                        footer = {text = "KKIRRU v" .. config.version .. " | MULTI-FORM"}
                     }}
                 }
                 
@@ -709,7 +907,7 @@ if success then
         end)
     end
 else
-    warn("kkirru failed to load: " .. (errorMsg or "Unknown error")) -- Đổi thông báo lỗi
+    warn("KKIRRU failed to load: " .. (errorMsg or "Unknown error"))
 end
 
 return kkirru
